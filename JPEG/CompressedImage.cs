@@ -8,8 +8,10 @@ namespace JPEG
 	{
 		public int Width { get; set; }
 		public int Height { get; set; }
+        public int RealWidth { get; set; }
+        public int RealHeight { get; set; }
 
-		public int Quality { get; set; }
+        public int Quality { get; set; }
 		
 		public Dictionary<BitsWithLength, byte> DecodeTable { get; set; }
 
@@ -22,7 +24,13 @@ namespace JPEG
 			{
 				byte[] buffer;
 
-				buffer = BitConverter.GetBytes(Width);
+                buffer = BitConverter.GetBytes(RealWidth);
+                sw.Write(buffer, 0, buffer.Length);
+
+                buffer = BitConverter.GetBytes(RealHeight);
+                sw.Write(buffer, 0, buffer.Length);
+
+                buffer = BitConverter.GetBytes(Width);
 				sw.Write(buffer, 0, buffer.Length);
 
 				buffer = BitConverter.GetBytes(Height);
@@ -63,9 +71,15 @@ namespace JPEG
 			var result = new CompressedImage();
 			using(var sr = new FileStream(path, FileMode.Open))
 			{
-				byte[] buffer = new byte[8];
+				var buffer = new byte[8];
 
-				sr.Read(buffer, 0, 4);
+                sr.Read(buffer, 0, 4);
+                result.RealWidth = BitConverter.ToInt32(buffer, 0);
+
+                sr.Read(buffer, 0, 4);
+                result.RealHeight = BitConverter.ToInt32(buffer, 0);
+
+                sr.Read(buffer, 0, 4);
 				result.Width = BitConverter.ToInt32(buffer, 0);
 
 				sr.Read(buffer, 0, 4);
@@ -78,7 +92,7 @@ namespace JPEG
 				var decodeTableSize = BitConverter.ToInt32(buffer, 0);
 				result.DecodeTable = new Dictionary<BitsWithLength, byte>(decodeTableSize, new BitsWithLength.Comparer());
 
-				for(int i = 0; i < decodeTableSize; i++)
+				for(var i = 0; i < decodeTableSize; i++)
 				{
 					sr.Read(buffer, 0, 4);
 					var bits = BitConverter.ToInt32(buffer, 0);

@@ -7,18 +7,19 @@ namespace JPEG.Utilities
 	static class IEnumerableExtensions
 	{
 		public static T MinOrDefault<T>(this IEnumerable<T> enumerable, Func<T, int> selector)
-		{
-			return enumerable.OrderBy(selector).FirstOrDefault();
-		}
+        {
+            var enumerable1 = enumerable as T[] ?? enumerable.ToArray();
+            var minValue = int.MaxValue;
+            T min = default;
+            foreach (var t in enumerable1)
+            {
+                var value = selector(t);
+                if (value >= minValue) continue;
+                minValue = value;
+                min = t;
+            }
 
-		public static IEnumerable<T> Without<T>(this IEnumerable<T> enumerable, params T[] elements)
-		{
-			return enumerable.Where(x => !elements.Contains(x));
+            return min;
 		}
-		
-		public static IEnumerable<T> ToEnumerable<T>(this T element)
-		{
-			yield return element;
-		}
-	}
+    }
 }

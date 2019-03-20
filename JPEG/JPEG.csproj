@@ -2,7 +2,22 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFrameworks>net472;netcoreapp2.2</TargetFrameworks>
+        <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
+        <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+        <StartupObject>JPEG.Program</StartupObject>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net472|AnyCPU'">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.2|AnyCPU'">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <Optimize>false</Optimize>
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,6 +25,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Update="earth.bmp">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="MARBLES.BMP">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="sample.bmp">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
